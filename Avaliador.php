@@ -21,8 +21,17 @@
 		public function getMenorLance() {
 			return $this->menorLance;
 		}
+
 		public function getMaiorLance() {
 			return $this->maiorLance;
+		}
+
+		public function getMediaDosLances(Leilao $leilao) {
+			$valorTotal = 0;
+			foreach ($leilao->getLances() as $lance) {
+				$valorTotal += $lance->getValor(); 
+			}
+			return $valorTotal/count($leilao->getLances());
 		}
 	}	
 ?>

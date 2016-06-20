@@ -100,4 +100,53 @@
 			$this->assertEquals($menorEsperado, $leiloeiro->getMenorLance(), 0.00001);
 			$this->assertEquals($maiorEsperado, $leiloeiro->getMaiorLance(), 0.00001);
 		}
+
+		public function testDevePegarOs3Maiores() {
+			$u1 = new Usuario("U1");
+			$u2 = new Usuario("U2");
+			$u3 = new Usuario("U3");
+			$u4 = new Usuario("U4");
+			$u5 = new Usuario("U5");
+
+			$leilao = new Leilao("Uma bola de Tênis");
+			$leilao->propoe(new Lance($u1, 300));
+			$leilao->propoe(new Lance($u2, 200));
+			$leilao->propoe(new Lance($u3, 100));
+			$leilao->propoe(new Lance($u4, 400));
+			$leilao->propoe(new Lance($u5, 500));
+
+			$leiloeiro = new Avaliador();
+			$leiloeiro->pegaOsMaioresNo($leilao);
+
+
+			$this->assertEquals(500, $leiloeiro->getTresMaiores()[0]->getValor(), 0.00001);
+			$this->assertEquals(400, $leiloeiro->getTresMaiores()[1]->getValor(), 0.00001);
+			$this->assertEquals(300, $leiloeiro->getTresMaiores()[2]->getValor(), 0.00001);
+		}
+
+		public function testDeveAceitarSomente2Lances() {
+			$u1 = new Usuario("U1");
+			$u2 = new Usuario("U2");
+
+			$leilao = new Leilao("Uma bola de Tênis");
+			$leilao->propoe(new Lance($u1, 300));
+			$leilao->propoe(new Lance($u2, 200));
+
+			$leiloeiro = new Avaliador();
+			$leiloeiro->pegaOsMaioresNo($leilao);
+
+
+			$this->assertEquals(300, $leiloeiro->getTresMaiores()[0]->getValor(), 0.00001);
+			$this->assertEquals(200, $leiloeiro->getTresMaiores()[1]->getValor(), 0.00001);
+		}
+
+		public function testDeveRetornarListaVaziaCasoNaoHajaLances() {
+
+			$leilao = new Leilao("Uma bola de Tênis");
+
+			$leiloeiro = new Avaliador();
+			$leiloeiro->pegaOsMaioresNo($leilao);
+
+			$this->assertEquals(0, count($leiloeiro->getTresMaiores()), 0.00001);
+		}
 	}

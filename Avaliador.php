@@ -7,6 +7,7 @@
 		
 		private $maiorLance = -INF;
 		private $menorLance = INF;
+		private $maiores = array();
 
 		public function avalia(Leilao $leilao) {
 			foreach ($leilao->getLances() as $lance) {
@@ -18,6 +19,22 @@
 				}
 			}
 		}
+
+		public function pegaOsMaioresNo(Leilao $leilao) {
+
+            $lances = $leilao->getLances();
+            usort($lances,function ($a,$b) {
+                if($a->getValor() == $b->getValor()) return 0;
+                return ($a->getValor() < $b->getValor()) ? 1 : -1;
+            });
+
+            $this->maiores = array_slice($lances, 0,3);
+        }
+
+	    public function getTresMaiores() {
+	        return $this->maiores;
+	    }
+
 		public function getMenorLance() {
 			return $this->menorLance;
 		}

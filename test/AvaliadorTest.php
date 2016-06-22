@@ -1,11 +1,14 @@
 <?php 
 	require_once "../Avaliador.php";
+	require_once "../CriadorDeLeilao.php";
 	class AvaliadorTest extends PHPUnit_Framework_TestCase {
 
 		private $leiloeiro;
+		private $criador;
 
 		public function setUp() {
 			$this->leiloeiro = new Avaliador();
+			$this->criador = new CriadorDeLeilao();
 		}
 
 		public function testDeveRetornarOMaiorEOMenor() {
@@ -13,13 +16,9 @@
 			$u2 = new Usuario("U2");
 			$u3 = new Usuario("U3");
 
-			$leilao = new Leilao("Uma bola de Tênis");
-			$leilao->propoe(new Lance($u1, 300));
-			$leilao->propoe(new Lance($u2, 200));
-			$leilao->propoe(new Lance($u3, 301));
+			$leilao = $this->criador->para("Playstation 4")->lance($u1, 300)->lance($u2, 200)->lance($u3, 301)->constroi();
 
 			$this->leiloeiro->avalia($leilao);
-
 
 			$menorEsperado = 200;
 			$maiorEsperado = 301;
@@ -32,10 +31,7 @@
 			$u2 = new Usuario("U2");
 			$u3 = new Usuario("U3");
 
-			$leilao = new Leilao("Uma bola de Tênis");
-			$leilao->propoe(new Lance($u1, 100));
-			$leilao->propoe(new Lance($u2, 100));
-			$leilao->propoe(new Lance($u3, 100));
+			$leilao = $this->criador->para("Uma bola de Tênis")->lance($u1, 100)->lance($u2, 100)->lance($u3, 100)->constroi();
 
 			$this->leiloeiro->avalia($leilao);
 
@@ -47,8 +43,7 @@
 		public function testDeveFuncionarComApenasUmLance() {
 			$u1 = new Usuario("U1");
 
-			$leilao = new Leilao("Uma bola de Tênis");
-			$leilao->propoe(new Lance($u1, 300));
+			$leilao = $this->criador->para("Uma bola de Tênis")->lance($u1, 300)->constroi();
 
 			$this->leiloeiro->avalia($leilao);
 
@@ -67,14 +62,8 @@
 			$u5 = new Usuario("U5");
 			$u6 = new Usuario("U6");
 
-			$leilao = new Leilao("Uma bola de Tênis");
-			$leilao->propoe(new Lance($u1, 300));
-			$leilao->propoe(new Lance($u2, 200));
-			$leilao->propoe(new Lance($u3, 454));
-			$leilao->propoe(new Lance($u4, 190));
-			$leilao->propoe(new Lance($u5, 147));
-			$leilao->propoe(new Lance($u6, 302));
-
+			$leilao = $this->criador->para("Uma bola de Tênis")->lance($u1, 300)->lance($u2, 200)->lance($u3, 454)->lance($u4, 190)->lance($u5, 147)->lance($u6, 302)->constroi();
+	
 			$this->leiloeiro->avalia($leilao);
 
 
@@ -89,13 +78,9 @@
 			$u2 = new Usuario("U2");
 			$u3 = new Usuario("U3");
 
-			$leilao = new Leilao("Uma bola de Tênis");
-			$leilao->propoe(new Lance($u1, 300));
-			$leilao->propoe(new Lance($u2, 200));
-			$leilao->propoe(new Lance($u3, 100));
+			$leilao = $this->criador->para("Uma bola de Tênis")->lance($u1, 300)->lance($u2, 200)->lance($u3, 100)->constroi();
 
 			$this->leiloeiro->avalia($leilao);
-
 
 			$menorEsperado = 100;
 			$maiorEsperado = 300;
@@ -110,15 +95,9 @@
 			$u4 = new Usuario("U4");
 			$u5 = new Usuario("U5");
 
-			$leilao = new Leilao("Uma bola de Tênis");
-			$leilao->propoe(new Lance($u1, 300));
-			$leilao->propoe(new Lance($u2, 200));
-			$leilao->propoe(new Lance($u3, 100));
-			$leilao->propoe(new Lance($u4, 400));
-			$leilao->propoe(new Lance($u5, 500));
+			$leilao = $this->criador->para("Uma bola de Tênis")->lance($u1, 300)->lance($u2, 200)->lance($u3, 100)->lance($u4, 400)->lance($u5, 500)->constroi();
 
 			$this->leiloeiro->pegaOsMaioresNo($leilao);
-
 
 			$this->assertEquals(500, $this->leiloeiro->getTresMaiores()[0]->getValor(), 0.00001);
 			$this->assertEquals(400, $this->leiloeiro->getTresMaiores()[1]->getValor(), 0.00001);
@@ -129,12 +108,9 @@
 			$u1 = new Usuario("U1");
 			$u2 = new Usuario("U2");
 
-			$leilao = new Leilao("Uma bola de Tênis");
-			$leilao->propoe(new Lance($u1, 300));
-			$leilao->propoe(new Lance($u2, 200));
+			$leilao = $this->criador->para("Uma bola de Tênis")->lance($u1, 300)->lance($u2, 200)->constroi();
 
 			$this->leiloeiro->pegaOsMaioresNo($leilao);
-
 
 			$this->assertEquals(300, $this->leiloeiro->getTresMaiores()[0]->getValor(), 0.00001);
 			$this->assertEquals(200, $this->leiloeiro->getTresMaiores()[1]->getValor(), 0.00001);
@@ -142,7 +118,7 @@
 
 		public function testDeveRetornarListaVaziaCasoNaoHajaLances() {
 
-			$leilao = new Leilao("Uma bola de Tênis");
+			$leilao = $this->criador->para("Uma bola de Tênis")->constroi();
 
 			$this->leiloeiro->pegaOsMaioresNo($leilao);
 
